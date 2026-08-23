@@ -1,0 +1,9 @@
+# Rust build artifacts
+sender-rust/target/
+
+# Local Go binaries
+receiver-go/receiver-go
+
+# Local runtime files
+*.log
+.DS_Store

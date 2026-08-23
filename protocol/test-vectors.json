@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "description": "Normative deterministic vectors for the Laboratory 2 wire protocol. Bit strings are transmitted left to right.",
+  "ascii_vectors": [
+    {
+      "case": "printable_ascii_A",
+      "input_text": "A",
+      "expected_octets_decimal": [65],
+      "expected_bits_most_significant_first": "01000001"
+    }
+  ],
+  "crc32_iso_hdlc_vectors": [
+    {
+      "case": "standard_check_value_123456789",
+      "input_text": "123456789",
+      "input_ascii_hex": "313233343536373839",
+      "expected_payload_bits_most_significant_first": "001100010011001000110011001101000011010100110110001101110011100000111001",
+      "expected_crc_hex": "CBF43926",
+      "expected_crc_decimal": 3421780262,
+      "expected_crc_bits_most_significant_first": "11001011111101000011100100100110",
+      "expected_clean_frame_bits": "00110001001100100011001100110100001101010011011000110111001110000011100111001011111101000011100100100110",
+      "expected_receiver_status": "ok",
+      "expected_decoded_text": "123456789"
+    }
+  ],
+  "hamming_secded_13_8_vectors": [
+    {
+      "case": "no_error_for_ascii_A",
+      "input_text": "A",
+      "input_data_bits_d7_through_d0": "01000001",
+      "expected_clean_codeword_positions_1_through_13": "1000100100010",
+      "received_codeword_positions_1_through_13": "1000100100010",
+      "expected_syndrome": 0,
+      "expected_overall_parity_mismatch": 0,
+      "expected_corrected_bit_positions": [],
+      "expected_receiver_status": "ok",
+      "expected_decoded_text": "A"
+    },
+    {
+      "case": "single_error_at_codeword_position_6_for_ascii_A",
+      "input_text": "A",
+      "expected_clean_codeword_positions_1_through_13": "1000100100010",
+      "introduced_error_bit_positions_one_based": [6],
+      "received_codeword_positions_1_through_13": "1000110100010",
+      "expected_syndrome": 6,
+      "expected_overall_parity_mismatch": 1,
+      "expected_corrected_bit_positions_one_based": [6],
+      "expected_codeword_after_correction": "1000100100010",
+      "expected_receiver_status": "corrected",
+      "expected_decoded_text": "A"
+    },
+    {
+      "case": "double_error_at_codeword_positions_3_and_5_for_ascii_A",
+      "input_text": "A",
+      "expected_clean_codeword_positions_1_through_13": "1000100100010",
+      "introduced_error_bit_positions_one_based": [3, 5],
+      "received_codeword_positions_1_through_13": "1010000100010",
+      "expected_syndrome": 6,
+      "expected_overall_parity_mismatch": 0,
+      "expected_corrected_bit_positions_one_based": [],
+      "expected_receiver_status": "detected_uncorrectable",
+      "expected_error_code": "uncorrectable_error",
+      "expected_decoded_text": null
+    }
+  ],
+  "deterministic_noise_vectors": [
+    {
+      "case": "splitmix64_one_flip_over_hamming_A",
+      "input_clean_frame_bits": "1000100100010",
+      "probability_numerator": 1,
+      "probability_denominator": 10,
+      "seed": 3,
+      "expected_flipped_zero_based_frame_indexes": [3],
+      "expected_flipped_bits_count": 1,
+      "expected_noisy_frame_bits": "1001100100010"
+    }
+  ]
+}
