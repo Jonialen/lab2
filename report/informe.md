@@ -19,9 +19,6 @@ urlcolor: blue
 
 # Nombres y carnés
 
-- COMPLETAR NOMBRE COMPLETO -- Carné 23663
-- COMPLETAR NOMBRE COMPLETO -- Carné COMPLETAR
-
 Repositorio del proyecto: <https://github.com/Jonialen/lab2>
 
 # Título de la práctica
