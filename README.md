@@ -1,6 +1,6 @@
 # Error Detection and Correction Laboratory
 
-This project is an executable two-language TCP experiment for comparing CRC-32 error detection with Hamming SECDED error correction over a simulated unreliable channel. The Rust sender, Go receiver, shared protocol, deterministic vectors, end-to-end integration, and joint launcher are complete. The academic report and experiment analysis remain intentionally out of scope for this implementation handoff.
+This project is an executable two-language TCP experiment for comparing CRC-32 error detection with Hamming SECDED error correction over a simulated unreliable channel. The Rust sender, Go receiver, shared protocol, deterministic vectors, end-to-end integration, joint launcher, experiment data, and academic report are complete.
 
 ## Quick start
 
@@ -57,10 +57,12 @@ TCP/IPv4 carries only the envelope. [`protocol/wire-protocol.md`](protocol/wire-
 ```text
 .
 ├── protocol/                 # Normative wire contract and deterministic vectors
-├── receiver-go/              # Persistent Go server, algorithms, tests, and guide
-├── scripts/run-lab.sh        # Joint lifecycle launcher
-├── sender-rust/              # Rust CLI sender and tests
-└── docs/                     # Assignment source material
+├── receiver-go/               # Persistent Go server, algorithms, tests, and guide
+├── scripts/run-lab.sh         # Joint lifecycle launcher
+├── sender-rust/               # Rust CLI sender and tests
+├── experiments/                # Experiment driver, raw/aggregated CSV, and figures
+├── report/                     # Report source (Markdown) and rendered PDF
+└── docs/                      # Assignment source material
 ```
 
 ## Joint launcher
@@ -148,32 +150,28 @@ Use `go test -short ./...` only when intentionally skipping the external Cargo p
 | Hostile-input, normative-vector, persistent-connection, and listener tests | Complete |
 | Deterministic real Rust-Go integration test | Complete |
 | Safe joint launcher | Complete |
-| Experiment CSV, graphs, discussion, conclusions, and academic report | Teammate handoff |
+| Experiment CSV, graphs, discussion, conclusions, and academic report | Complete |
 
-## Team handoff
+## Experiments and report
 
-### Implemented here
+`experiments/run_experiments.py` builds the real receiver, then drives the real Rust sender binary over TCP through a matrix of message sizes, both algorithms, noise probabilities, and seeds. Nothing about noise or the algorithms is reimplemented in the driver; every row is a genuine end-to-end request.
 
-- The protocol contract and deterministic vectors are frozen.
-- The Rust sender creates already-noisy `frame_bits`; the Go receiver never simulates noise.
-- The receiver rejects duplicate and unknown JSON keys, processes multiple lines per connection, closes only an overlong client connection, and remains alive after malformed input.
-- Both algorithms return the exact protocol statuses, errors, and metrics.
-- The integration test executes the actual Rust binary against an in-process Go TCP server.
+```bash
+cd sender-rust && cargo build --release && cd ..
+python3 experiments/run_experiments.py   # writes experiments/data/raw_results.csv
+python3 experiments/analyze.py           # writes summary CSVs and experiments/figures/*.png
+```
 
-### Remaining teammate checklist
+- `experiments/data/raw_results.csv` — untouched per-request results (1,462 requests).
+- `experiments/data/summary_by_probability.csv`, `experiments/data/summary_overhead.csv` — aggregated/derived data, kept separate from the raw file.
+- `experiments/figures/` — the PNG figures embedded in the report.
+- `report/informe.md` — report source (Markdown + pandoc metadata); `report/Laboratorio2_Informe.pdf` is the rendered deliverable. Rebuild with:
 
-- [ ] Define the experiment matrix: messages, both algorithms, probabilities, seeds, and repetitions.
-- [ ] Run reproducible experiments and capture raw results as CSV.
-- [ ] Preserve raw CSV separately from any cleaned or aggregated dataset.
-- [ ] Generate labeled graphs comparing detection, correction, overhead, and failure behavior.
-- [ ] Explain the experimental method and connect observations to CRC and SECDED theory.
-- [ ] Discuss limitations, including independent bit flips, printable-ASCII scope, and TCP not being the simulated unreliable channel.
-- [ ] Write conclusions supported by the collected data.
-- [ ] Assemble the academic report using the course rubric and required format.
-- [ ] Include exact commands, parameter values, and seeds so results are reproducible.
-- [ ] Re-run both language suites and at least one joint launcher example before submission.
+  ```bash
+  cd report && pandoc informe.md -o Laboratorio2_Informe.pdf --pdf-engine=xelatex -V colorlinks=true
+  ```
 
-Do not copy implementation documentation verbatim as analysis. The report must interpret measured evidence.
+Before submitting, fill in both team members' full names and carnés at the top of `report/informe.md` (currently placeholders) and re-render the PDF.
 
 ## Operational boundaries
 
