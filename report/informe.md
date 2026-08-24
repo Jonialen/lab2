@@ -2,8 +2,8 @@
 title: "Laboratorio \\#2 -- Esquemas de detección y corrección de errores"
 subtitle: "CC3067 Redes -- Ciclo 2 de 2026"
 author:
-  - "COMPLETAR NOMBRE COMPLETO -- Carné: 23663"
-  - "COMPLETAR NOMBRE COMPLETO -- Carné: COMPLETAR"
+  - "Luis Francisco Padilla -- Carné: 23663"
+  - "Jonathan Alejandro Diaz -- Carné: 23812"
 date: "23 de agosto de 2026"
 lang: es
 geometry: margin=2.7cm
